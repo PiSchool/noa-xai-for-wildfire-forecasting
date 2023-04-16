@@ -2,6 +2,19 @@
 
 Due to climate change, we expect an exacerbation of fire in Europe and around the world, with major wildfire events extending to northern latitudes and boreal regions [1]. In this context, it is important to improve our capabilities to anticipate fire danger and understand its driving mechanisms at a global scale. The Earth is an interconnected system, in which large scale processes can have an effect on the global climate and fire seasons. For example, extreme fires in Siberia have been linked to previous-year surface moisture conditions and anomalies in the Arctic Oscillation [2]. In the context of the ESA-funded project SeasFire, we have gathered Earth Observation data related to seasonal fire drivers and created a global analysis-ready datacube for seasonal fire forecasting for the years 2001-2021 at a spatiotemporal resolution of 0.25 deg x 0.25 deg x 8 days [3]. The datacube includes a combination of variables describing the seasonal fire drivers (climate, vegetation, oceanic indices, population density) and the burned areas. Initial studies show the potential of Deep Learning for i) short-term regional [4] and ii) long-term global wildfire forecasting [5]. The goal of this challenge is to develop models that are able to capture global-scale spatiotemporal associations and forecast burned area sizes on a subseasonal to seasonal scale.
 
+# References
+[1] Wu, Chao, et al. "Historical and future global burned area with changing climate and human demography." One Earth 4.4 (2021): 517-530.
+
+[2] Kim, Jin-Soo, et al. "Extensive fires in southeastern Siberian permafrost linked to preceding Arctic Oscillation." Science advances 6.2 (2020): eaax3308.
+
+[3] Alonso, Lazaro, et al. Seasfire Cube: A Global Dataset for Seasonal Fire Modeling in the Earth System. Zenodo, 30 Sept. 2022, p., doi:10.5281/zenodo.7108392.
+
+[4] Kondylatos, Spyros et al. “Wildfire Danger Prediction and Understanding with Deep Learning.” Geophysical Research Letters”, 2022.  doi: 10.1029/2022GL099368
+
+[5] Prapas, Ioannis, et al. "Deep Learning for Global Wildfire Forecasting." arXiv preprint arXiv:2211.00534 (2022).
+
+
+
 
 ## Directory structure
 Update appropriately before handing over this repository. You may want to add other directories/files or remove those you don't need.
