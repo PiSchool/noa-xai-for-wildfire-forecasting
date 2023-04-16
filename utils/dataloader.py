@@ -66,6 +66,7 @@ class FireDataset(Dataset):
         table_mean_std: pd.DataFrame = None,
         time_slice=None,
         preprocessing=None,
+        fire_quantiles = None,
         target="fcci_ba",
         inland_map=None,
         delta_time=1,
@@ -132,6 +133,8 @@ class FireDataset(Dataset):
             )
         self.preprocessing = preprocessing
         self.inland_map = inland_map
+        if fire_quantiles != None:
+          self.fire_quantiles = fire_quantiles.loc[target]
 
     def __len__(self):
         return len(self.accepted_slices)
@@ -140,8 +143,21 @@ class FireDataset(Dataset):
         img = self.dx[idx].astype(np.float32)
         if self.transforms:
             img = self.transforms(img)
-        mask = self.dy.isel(self.accepted_slices.iloc[idx, :-1].to_dict()).fillna(0)
-        mask = mask.where(mask == 0, 1).to_numpy()
+        
+        if self.fire_quantiles is not None:
+          mask = self.dy.isel(self.accepted_slices.iloc[idx,:-1].to_dict()).fillna(-1).to_numpy()
+          for i, (quantile, quantile_value) in enumerate(self.fire_quantiles.iteritems()):
+            quantile = float(quantile)
+            if i == 0:
+              # zeros (not burned area, but on land) should stay the same
+              prev_quantile_value = quantile_value
+              # every value that is higher (or equal to) previous quantile and lower or equal to current quantile receives i (e.g. 1 for first quantile)
+            else:
+              mask = np.where((mask >= prev_quantile_value) & (mask <= quantile_value), quantile, mask)
+              prev_quantile_value = quantile_value
+        else"
+          mask = self.dy.isel(self.accepted_slices.iloc[idx, :-1].to_dict()).fillna(0)
+          mask = mask.where(mask == 0, 1).to_numpy()
         if self.inland_map is not None:
             mm = self.inland_map.isel(
                 self.accepted_slices.iloc[idx][["latitude", "longitude"]].to_dict()
@@ -162,6 +178,7 @@ def create_datasets_model(
     table_mean_std=None,
     target="fcci_ba",
     delta_time=1,
+    fire_quantiles=None,
     **kwargs_firedaatset,
 ):
     if slice_test is not None:
@@ -170,6 +187,7 @@ def create_datasets_model(
             time_slice=slice_test,
             table_mean_std=table_mean_std,
             delta_time=delta_time,
+            fire_quantiles=fire_quantiles,
             target=target,
             **kwargs_firedaatset,
         )
@@ -182,6 +200,7 @@ def create_datasets_model(
             time_slice=slice_train,
             table_mean_std=table_mean_std,
             delta_time=delta_time,
+            fire_quantiles=fire_quantiles,
             target=target,
             **kwargs_firedaatset,
         )
@@ -194,6 +213,7 @@ def create_datasets_model(
             time_slice=slice_valid,
             table_mean_std=table_mean_std,
             delta_time=delta_time,
+            fire_quantiles=fire_quantiles,
             target=target,
             **kwargs_firedaatset,
         )
