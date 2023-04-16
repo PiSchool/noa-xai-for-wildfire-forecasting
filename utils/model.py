@@ -9,6 +9,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset, TensorDataset
 from tqdm.notebook import tqdm as ntqdm
+from torch.nn import MSELoss
 
 # import albumentations as albu
 # import xarray as xr
@@ -217,7 +218,7 @@ class outconv(nn.Module):
 
 # UNET Model
 class UNet(nn.Module):
-    def __init__(self, n_channels, n_classes):
+    def __init__(self, n_channels, n_classes, regression=False):
         super(UNet, self).__init__()
         self.inc = inconv(n_channels, 64)
         self.down1 = down(64, 128)
@@ -229,6 +230,8 @@ class UNet(nn.Module):
         self.up3 = up(256, 64, False)
         self.up4 = up(128, 64, False)
         self.outc = outconv(64, n_classes)
+        self.regression = regression
+        
 
     def forward(self, x):
         x1 = self.inc(x)
@@ -241,7 +244,11 @@ class UNet(nn.Module):
         x = self.up3(x, x2)
         x = self.up4(x, x1)
         x = self.outc(x)
-        return torch.sigmoid(x).squeeze(dim=1)
+        
+        if self.regression:
+            return x.squeeze()
+        else:
+            return torch.sigmoid(x).squeeze(dim=1)
 
     def train_model(
         self,
@@ -249,7 +256,7 @@ class UNet(nn.Module):
         valid_loader: DataLoader,
         n_epochs: int = 32,
         t_mask=None,
-        criterion=BCEDiceLoss(eps=1.0, activation=None, mask=None),
+        criterion=MSELoss() if self.regression else BCEDiceLoss(eps=1.0, activation=None, mask=None),
         optimizer=None,
         scheduler=None,
     ):
