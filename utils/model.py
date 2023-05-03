@@ -231,7 +231,6 @@ class UNet(nn.Module):
         self.up4 = up(128, 64, False)
         self.outc = outconv(64, n_classes)
         self.regression = regression
-        
 
     def forward(self, x):
         x1 = self.inc(x)
@@ -244,7 +243,7 @@ class UNet(nn.Module):
         x = self.up3(x, x2)
         x = self.up4(x, x1)
         x = self.outc(x)
-        
+
         if self.regression:
             return x.squeeze()
         else:
@@ -256,7 +255,7 @@ class UNet(nn.Module):
         valid_loader: DataLoader,
         n_epochs: int = 32,
         t_mask=None,
-        criterion=MSELoss() if self.regression else BCEDiceLoss(eps=1.0, activation=None, mask=None),
+        criterion=None,
         optimizer=None,
         scheduler=None,
     ):
@@ -267,7 +266,12 @@ class UNet(nn.Module):
             scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
                 optimizer, factor=0.2, patience=2, cooldown=2
             )
-
+        if not criterion:
+            criterion = (
+                MSELoss()
+                if self.regression
+                else BCEDiceLoss(eps=1.0, activation=None, mask=None)
+            )
         train_loss_list = []
         valid_loss_list = []
         dice_score_list = []

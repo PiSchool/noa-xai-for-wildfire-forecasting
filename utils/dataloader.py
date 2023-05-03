@@ -66,7 +66,7 @@ class FireDataset(Dataset):
         table_mean_std: pd.DataFrame = None,
         time_slice=None,
         preprocessing=None,
-        fire_quantiles = None,
+        fire_quantiles=None,
         target="fcci_ba",
         inland_map=None,
         delta_time=1,
@@ -134,7 +134,9 @@ class FireDataset(Dataset):
         self.preprocessing = preprocessing
         self.inland_map = inland_map
         if fire_quantiles != None:
-          self.fire_quantiles = fire_quantiles.loc[target]
+            self.fire_quantiles = fire_quantiles.loc[target]
+        else:
+            self.fire_quantiles = None
 
     def __len__(self):
         return len(self.accepted_slices)
@@ -143,21 +145,31 @@ class FireDataset(Dataset):
         img = self.dx[idx].astype(np.float32)
         if self.transforms:
             img = self.transforms(img)
-        
+
         if self.fire_quantiles is not None:
-          mask = self.dy.isel(self.accepted_slices.iloc[idx,:-1].to_dict()).fillna(-1).to_numpy()
-          for i, (quantile, quantile_value) in enumerate(self.fire_quantiles.iteritems()):
-            quantile = float(quantile)
-            if i == 0:
-              # zeros (not burned area, but on land) should stay the same
-              prev_quantile_value = quantile_value
-              # every value that is higher (or equal to) previous quantile and lower or equal to current quantile receives i (e.g. 1 for first quantile)
-            else:
-              mask = np.where((mask >= prev_quantile_value) & (mask <= quantile_value), quantile, mask)
-              prev_quantile_value = quantile_value
-        else"
-          mask = self.dy.isel(self.accepted_slices.iloc[idx, :-1].to_dict()).fillna(0)
-          mask = mask.where(mask == 0, 1).to_numpy()
+            mask = (
+                self.dy.isel(self.accepted_slices.iloc[idx, :-1].to_dict())
+                .fillna(-1)
+                .to_numpy()
+            )
+            for i, (quantile, quantile_value) in enumerate(
+                self.fire_quantiles.iteritems()
+            ):
+                quantile = float(quantile)
+                if i == 0:
+                    # zeros (not burned area, but on land) should stay the same
+                    prev_quantile_value = quantile_value
+                    # every value that is higher (or equal to) previous quantile and lower or equal to current quantile receives i (e.g. 1 for first quantile)
+                else:
+                    mask = np.where(
+                        (mask >= prev_quantile_value) & (mask <= quantile_value),
+                        quantile,
+                        mask,
+                    )
+                    prev_quantile_value = quantile_value
+        else:
+            mask = self.dy.isel(self.accepted_slices.iloc[idx, :-1].to_dict()).fillna(0)
+            mask = mask.where(mask == 0, 1).to_numpy()
         if self.inland_map is not None:
             mm = self.inland_map.isel(
                 self.accepted_slices.iloc[idx][["latitude", "longitude"]].to_dict()
