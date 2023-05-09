@@ -15,9 +15,13 @@ iv) Identify some good examples for local explainability. For example, one can s
 
 ## References
 [1] Wu, Chao, et al. "Historical and future global burned area with changing climate and human demography." One Earth 4.4 (2021): 517-530.
+
 [2] Kim, Jin-Soo, et al. "Extensive fires in southeastern Siberian permafrost linked to preceding Arctic Oscillation." Science advances 6.2 (2020): eaax3308.
+
 [3] Alonso, Lazaro, et al. Seasfire Cube: A Global Dataset for Seasonal Fire Modeling in the Earth System. Zenodo, 30 Sept. 2022, p., doi:10.5281/zenodo.7108392.
+
 [4] Kondylatos, Spyros et al. “Wildfire Danger Prediction and Understanding with Deep Learning.” Geophysical Research Letters”, 2022.  doi: 10.1029/2022GL099368
+
 [5] Prapas, Ioannis, et al. "Deep Learning for Global Wildfire Forecasting." arXiv preprint arXiv:2211.00534 (2022).
 
 
