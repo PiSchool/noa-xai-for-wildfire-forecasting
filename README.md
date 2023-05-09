@@ -13,59 +13,78 @@ Due to climate change, we expect an exacerbation of fire in Europe and around th
 
 [5] Prapas, Ioannis, et al. "Deep Learning for Global Wildfire Forecasting." arXiv preprint arXiv:2211.00534 (2022).
 
+## Challenge context
+Due to climate change, we expect an exacerbation of fire in Europe and around the world, with major wildfire events extending to northern latitudes and boreal regions [1]. In this context, it is important to improve our capabilities to anticipate fire danger and understand its driving mechanisms at a global scale. The Earth is an interconnected system, in which large scale processes can have an effect on the global climate and fire seasons. For example, extreme fires in Siberia have been linked to previous-year surface moisture conditions and anomalies in the Arctic Oscillation [2]. In the context of the ESA-funded project [SeasFire](https://seasfire.hua.gr/), [NOA](http://orionlab.space.noa.gr/) have gathered Earth Observation data related to seasonal fire drivers and created a global analysis-ready datacube for seasonal fire forecasting for the years 2001-2021 at a spatiotemporal resolution of 0.25 deg x 0.25 deg x 8 days [3]. The datacube includes a combination of variables describing the seasonal fire drivers (climate, vegetation, oceanic indices, population density) and the burned areas. Initial studies show the potential of Deep Learning for i) short-term regional [4] and ii) long-term global wildfire forecasting [5]. The goal of this challenge is to develop models that are able to capture global-scale spatiotemporal associations and forecast burned area sizes on a subseasonal to seasonal scale.
 
+## Problem to solve
+Grasp sub-seasonal to seasonal forecasting of global burned area leveraging Explainable AI (XAI) techniques on deep learning models.
+
+## Challenge scope
+Which predictors are more important when forecasting at different lead times and ecoregions.
+i) Different ecoregions: Is the importance of the variables consistent across different fire regimes? Which variables are important for predicting in different fire regimes (e.g. Mediterranean, Tropics, Savannahs…)
+ii) Spatial focus: If the input has a spatial context, in which part of the spatial context does the model pay attention for each variable?
+iii) Are the identified explanations physically meaningful/meaningless? Do they reflect physical laws or data artifacts?
+iv) Identify some good examples for local explainability. For example, one can search for a major wildfire event where there are known causes, and see if the explainability of the model agrees.
+
+## References
+[1] Wu, Chao, et al. "Historical and future global burned area with changing climate and human demography." One Earth 4.4 (2021): 517-530.
+[2] Kim, Jin-Soo, et al. "Extensive fires in southeastern Siberian permafrost linked to preceding Arctic Oscillation." Science advances 6.2 (2020): eaax3308.
+[3] Alonso, Lazaro, et al. Seasfire Cube: A Global Dataset for Seasonal Fire Modeling in the Earth System. Zenodo, 30 Sept. 2022, p., doi:10.5281/zenodo.7108392.
+[4] Kondylatos, Spyros et al. “Wildfire Danger Prediction and Understanding with Deep Learning.” Geophysical Research Letters”, 2022.  doi: 10.1029/2022GL099368
+[5] Prapas, Ioannis, et al. "Deep Learning for Global Wildfire Forecasting." arXiv preprint arXiv:2211.00534 (2022).
 
 
 ## Directory structure
-Update appropriately before handing over this repository. You may want to add other directories/files or remove those you don't need.
 
 ```
 ├── data
-│   ├── external       <- Data from third party sources
-│   ├── interim        <- Intermediate data that has been transformed
-│   ├── processed      <- The final, canonical data sets for modeling
-│   ├── raw            <- The original, immutable data dump
-│   └── scripts        <- Scripts to download or generate data
+│   ├── Biomes_and_GFED <- Data from third party sources
+│   ├── images          <- visual results
+│   ├── processed       <- average and std used for normalization
+│   └── raw             <- Seasfire daatcube tiny examples
 │
 ├── models             <- Trained and serialized models
 │
-├── notebooks          <- Jupyter notebooks. Naming convention is a date (for 
-│                         ordering) and a short `_` delimited description, 
-│                         e.g. `2022-05-18_initial_data_exploration.ipynb`.
+├── notebooks                           <- Jupyter notebooks.
+│   ├── binary_segmantation             <- containing GUI for xAI
+│   └── fire_size_quantile_regression   <- containing process to train a segmentation model
+│
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc
 │   └── figures        <- Generated graphics and figures
 │
-├── requirements.txt   <- Required packages (dependencies), e.g. generated 
+├── requirements.txt   <- Required packages (dependencies) generated 
 │                         with `pip freeze > requirements.txt`
 │
-├── scripts            <- Scripts to train a model, make predictions and so on
+├── utils             <- Scripts to train a model, make predictions and visualizations
 │
-├── setup.py           <- makes project pip installable (pip install -e .) so 
-│                         that `your_package_name` can be imported
-└── your_package_name  <- Source code for use in this project
-    ├── __init__.py    <- (Optional) Makes `your_package_name` a Python module
-    └── *.py           <- Other Python source files (can also be organized in 
-                          one or more subdirectories)
+└── setup.py           <- makes project pip installable (pip install -e .) so 
 ```
+
+## Quickstart GUI
+
+Directly launch the GUI in [Binder](https://mybinder.readthedocs.io) (Interactive jupyter notebook/lab environment in the cloud) or in [Google colab](https://research.google.com/colaboratory/faq.html) (which is much faster for interaction given that it provides GPU resources that makes the xAI models much faster).
+
+[![Open All Collab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1tMLrn1UdgDSnZHpH3Gsr_tOinuWcPiOj?usp=sharing)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PiSchool/noa-xai-for-wildfire-forecasting/build_binder?labpath=voila%2Frender%2Fmain%2Fnotebooks%2Fbinary_segmentation%2FGUI_Segmentation_Interpret.ipynb)
 
 ## How to install
-Instructions on how to install the package (can simply amount to setting up a virtual environment and installing the required dependencies).
+### Clone this repo
 
-## Additional data
-Instructions on how to download additional data (datasets, pre-trained models, ...) needed for running the code, specifically any kind of data that cannot be stored in this repo due to its large size.
+```bash
+git clone https://github.com/PiSchool/noa-xai-for-wildfire-forecasting.git
+cd noa-xai-for-wildfire-forecasting
+```
+### Create virtual environment
+Once you have cloned and navigated into the repository, you can set up a development environment using `venv` and install all packages from `requirements.txt`.
+
+```bash
+python3 -m venv env
+source env/bin/activate
+python3 -m pip install -r requirements.txt
+```
 
 ## How to run
-Instructions on how to run the code. For example, if the developed code is used as a CLI tool:
-```
-your_script.py --arg1 val1 --arg2 val2
-```
-If the code is used as a library/framework, you should provide a quick-start example like the one below:
-```python
-an_object = MyClass(...)
-
-input_value = "..."
-output_value = an_object.do_something(input_value)
-```
+Two Jupyter notebook are provided and can be run either in the virtual environment created here, calling `jupyter notebook` and navigating to those files, or opening them into colab.
 
 ## The team
 This challenge, sponsored by the National Observatory of Athens, was carried out by Giovanni Paolini, and Johanna Strebl as part of the 12th edition of Pi School's School of AI program.
