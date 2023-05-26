@@ -78,7 +78,7 @@ python3 -m pip install -r requirements.txt
 Two Jupyter notebook are provided and can be run either in the virtual environment created here, calling `jupyter notebook` and navigating to those files, or opening them into colab.
 
 ## The team
-This challenge, sponsored by the National Observatory of Athens, was carried out by Giovanni Paolini, and Johanna Strebl as part of the 12th edition of Pi School's School of AI program.
+This challenge, sponsored by Pi School for the National Observatory of Athens (NOA), was carried out by Giovanni Paolini, and Johanna Strebl as part of the 12th edition of Pi School's School of AI program.
 | Giovanni Paolini  | Johanna Strebl | 
 | ------------- | ------------- | 
 | ![1st team member](https://avatars.githubusercontent.com/u/73278942?v=4) | ![2nd team member](https://media.licdn.com/dms/image/C5603AQEMeBfjHTRBoQ/profile-displayphoto-shrink_800_800/0/1593677172106?e=1686787200&v=beta&t=gwLL1-rT8uTbDGDKomUJlJ8qXGHDddgSun0If5msx9U) | 
