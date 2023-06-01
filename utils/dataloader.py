@@ -133,7 +133,7 @@ class FireDataset(Dataset):
             )
         self.preprocessing = preprocessing
         self.inland_map = inland_map
-        if fire_quantiles != None:
+        if fire_quantiles is not None:
             self.fire_quantiles = fire_quantiles.loc[target]
         else:
             self.fire_quantiles = None
