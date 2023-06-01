@@ -153,7 +153,7 @@ class FireDataset(Dataset):
                 .to_numpy()
             )
             for i, (quantile, quantile_value) in enumerate(
-                self.fire_quantiles.iteritems()
+                self.fire_quantiles.items()
             ):
                 quantile = float(quantile)
                 if i == 0:
