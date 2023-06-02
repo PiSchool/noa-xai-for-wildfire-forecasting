@@ -155,7 +155,7 @@ class FireDataset(Dataset):
             for i, (quantile, quantile_value) in enumerate(
                 self.fire_quantiles.items()
             ):
-                quantile = float(quantile)
+                quantile = float(quantile[0])
                 if i == 0:
                     # zeros (not burned area, but on land) should stay the same
                     prev_quantile_value = quantile_value
