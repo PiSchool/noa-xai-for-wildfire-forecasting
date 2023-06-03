@@ -164,6 +164,68 @@ def visualize_batch_prediction(
         if clean_axis:
             [x.axis("off") for x in row_ax]
 
+def visualize_data(
+    loader,
+    variables_selected,
+    variable_to_show="rel_hum",
+    n_images=5,
+    clean_axis=True,
+    x_coords=None,
+    y_coords=None,
+    **kwargs_imshow,
+):
+    """
+    Visualize a number :n_images: of pair which is a comparison between the prediction
+    of the :model: and the target image contained in the :loader:.
+    INPUTS:
+      model - trained model
+      loader: torch.DataLoader
+      predict_on_gpu: bool - weather or not to predict the images on the gpu.
+      x_coords: numpy.array
+      y_coords: numpy.array
+      clean_axis: bool - weather or not to delete the x/y ticks in the plot.
+      kwargs_imshow: additional parameters for matplotlib.pyplot.imshow
+    example:
+      visualize_batch_prediction(model, valid_loader, n_images = 10, x_coords = tiny_ds.longitude.values, y_coords = tiny_ds.latitude.values, cmap = 'Reds', vmin = 0, vmax = 1)
+    """
+    fig, axs = plt.subplots(n_images, 2, figsize=(8, 4 * n_images))
+    countries = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
+    il = iter(loader)
+
+    dict_var = dict(zip(variables_selected, range(len(variables_selected))))
+
+    for it, row_ax in enumerate(axs):
+        data, target = next(il)
+        # if a batch of images is extracted take the image with more burned area
+        if len(target.shape) == 3:
+            indx = (target != 0).sum(axis=[1, 2]).argmax()
+            target = target[indx]
+            data = data[indx]
+        data = data[dict_var[variable_to_show]]
+
+        visualize_image(
+            data,
+            ax=row_ax[0],
+            return_output=False,
+            countries=countries,
+            x_coords=x_coords,
+            y_coords=y_coords,
+            **kwargs_imshow,
+        )
+        visualize_image(
+            target,
+            ax=row_ax[1],
+            return_output=False,
+            countries=countries,
+            x_coords=x_coords,
+            y_coords=y_coords,
+            **kwargs_imshow,
+        )
+        if it == 0:
+            row_ax[0].set_title("Data"+" "+variable_to_show+" "+"slice", fontsize=12)
+            row_ax[1].set_title("TARGET", fontsize=12)
+        if clean_axis:
+            [x.axis("off") for x in row_ax]
 
 
 
